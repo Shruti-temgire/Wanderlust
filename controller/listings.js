@@ -40,13 +40,29 @@ module.exports.renderEditForm=async(req,res)=>{
     res.render("listings/edit.ejs",{listing})
 }
 
-module.exports.updateListing=async(req,res)=>{
-    let{id}=req.params;
-    await Listing.findByIdAndUpdate(id,{...req.body.listing})
-    req.flash("success","listing updated")
-    res.redirect(`/listings/${id}`)
-}
+module.exports.updateListing = async (req, res) => {
+    let { id } = req.params;
 
+    let listing = await Listing.findByIdAndUpdate(
+        id,
+        { ...req.body.listing },
+        { new: true }
+    );
+
+    if (req.file) {
+        listing.image = {
+            url: req.file.path,
+            filename: req.file.filename
+        };
+
+        await listing.save();
+    }
+
+    req.flash("success", "listing updated");
+    res.redirect(`/listings/${id}`);
+    console.log("BODY:", req.body);
+console.log("FILE:", req.file);
+};
 module.exports.destroyListing=async(req,res)=>{
     let {id}=req.params;
     let deletedlisting= await Listing.findByIdAndDelete(id);
