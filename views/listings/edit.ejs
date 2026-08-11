@@ -19,9 +19,14 @@
        <br/>
         </div>
 
+      <div class="mb-3">
+        original listing image <br>
+        <img src="<%= originalImageUrl %> " height="500px" width="500px"/>
+          </div>
+
        <div class="mb-3">
-        <label for="image" class="form-label">Image</label>
-         <input name="listing[image]" class="form-control" value="<%= listing.image%>" type="file" required />
+        <label for="image" class="form-label">upload new image</label>
+         <input name="listing[image]" class="form-control"  type="file" />
          <div class="invalid-feedback">please enter a valid image </div>
          <br/>
           </div>

@@ -20,6 +20,29 @@ router.route("/")
 
 //create new routes
 router.get("/new", isLoggedIn,listingController.renderNewForm)
+// SEARCH ROUTE
+router.get("/search", wrapasync(async (req, res) => {
+    const destination = req.query.destination || "";
+
+    const allListings = await Listing.find({
+        $or: [
+            { country: { $regex: destination, $options: "i" } },
+            { location: { $regex: destination, $options: "i" } }
+        ]
+    });
+
+    if (allListings.length === 0) {
+        return res.render("listings/index.ejs", {
+            allListings: [],
+            searchError: "Not a valid destination"
+        });
+    }
+
+    res.render("listings/index.ejs", {
+        allListings,
+        searchError: null
+    });
+}));
 
 
 //show and update and delete

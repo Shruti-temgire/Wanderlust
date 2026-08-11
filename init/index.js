@@ -1,14 +1,17 @@
-const mongoose=require("mongoose")
-const initData=require("./data.js");
-const Listing=require("../models/listing.js")
+const mongoose = require("mongoose");
+const initData = require("./data.js");
+const Listing = require("../models/listing.js");
 
-main().then(()=>{
-    console.log("connected to db")
-}).catch((err)=>{
-    console.log(err)
-})
-async function main(){
-    await mongoose.connect("mongodb://127.0.0.1:27017/Wanderlust")
+main()
+    .then(() => {
+        console.log("connected to db");
+    })
+    .catch((err) => {
+        console.log(err);
+    });
+
+async function main() {
+    await mongoose.connect("mongodb://127.0.0.1:27017/Wanderlust");
 }
 
 const initDB = async () => {
@@ -16,7 +19,6 @@ const initDB = async () => {
 
     initData.data = initData.data.map((obj) => ({
         ...obj,
-        image: obj.image.url,   // convert image object to URL string
         owner: "6a77484b51ef759ef8d20ade"
     }));
 
@@ -26,7 +28,4 @@ const initDB = async () => {
 };
 
 initDB();
-
-
-
 

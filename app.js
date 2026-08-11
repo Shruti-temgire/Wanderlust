@@ -10,6 +10,7 @@ const methodOverride=require("method-override")
 const ejsMate=require("ejs-mate");
 const expresserror=require("./utils/expresserror.js")
 const session=require ("express-session")
+const { MongoStore } = require("connect-mongo");
 const flash=require("connect-flash")
 const passport=require("passport")
 const LocalStrategy=require("passport-local")
@@ -32,7 +33,7 @@ app.use(express.urlencoded({extended:true}))
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname,"/public")))
 
-
+const dburl=process.env.ATLASDB_URL;
 
 main().then(()=>{
     console.log("connected to db")
@@ -40,7 +41,7 @@ main().then(()=>{
     console.log(err)
 })
 async function main(){
-    await mongoose.connect("mongodb://127.0.0.1:27017/Wanderlust")
+    await mongoose.connect(dburl)
 }
 
 const validateListing=(req,res,next)=>{
@@ -53,7 +54,20 @@ const validateListing=(req,res,next)=>{
     }
 }
 
+const store = MongoStore.create({
+    mongoUrl: dburl,
+    crypto: {
+        secret: "mysupersecretcode",
+    },
+    touchAfter: 24 * 3600,
+});
+
+store.on("error",()=>{
+    console.log("error in mongo session store",err)
+})
+
 const sessionOptions={
+    store,
     secret:"mysupersecretcode",
     resave:false,
     saveUninitialized:true,
@@ -64,9 +78,12 @@ const sessionOptions={
     }
     
 }
-app.get("/",(req,res)=>{
-    res.send("i i am root")
-})
+// app.get("/",(req,res)=>{
+//     res.send("i i am root")
+// })
+
+
+
 
 app.use(session(sessionOptions))
 app.use(flash())
@@ -99,16 +116,15 @@ app.use("/listings",listingRouter);
 app.use("/listings/:id/reviews",reviewRouter);
 app.use("/",userRouter)
 
-app.all("/*splat",(req,res,next)=>{
-    next(new expresserror(404,"page not found"))
-} )
+app.all("/{*splat}", (req, res, next) => {
+    next(new expresserror(404, "page not found"));
+});
 
 app.use((err, req, res, next) => {
     let { statusCode = 500 } = err;
 
     res.status(statusCode).render("error.ejs", { err });
 });
-
 
 app.listen(8080,()=>{
     console.log("sever listening on port 8080")

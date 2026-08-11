@@ -14,6 +14,7 @@ const listingSchema=new Schema({
     url:String,
     filename:String,
 },
+
     price:{
         type:Number,
     },
@@ -23,6 +24,17 @@ const listingSchema=new Schema({
     country:{
         type:String,
     }, 
+    geometry: {
+    type: {
+        type: String,
+        enum: ["Point"],
+        required: true
+    },
+    coordinates: {
+        type: [Number],
+        required: true
+    }
+},
     reviews:[{
         type: Schema.Types.ObjectId,
         ref:"review",
@@ -31,6 +43,23 @@ owner:{
     type:Schema.Types.ObjectId,
     ref:"User"
 },
+category: {
+    type: String,
+    enum: [
+        "trending",
+        "rooms",
+        "iconic cities",
+        "mountains",
+        "castles",
+        "amazing pools",
+        "camping",
+        "farms",
+        "arctic",
+        "Boats",
+        "Domes"
+    ]
+}
+
 
 })
 listingSchema.post("findOneAndDelete",async(listing)=>{

@@ -1,12 +1,162 @@
 <%layout("/layouts/boilerplate")%>
 <body>
-  
-    <h3>all listings</h3>
-    <!-- <form method ="get" action="/listings/new">
-        <button> create NEW listing</button>
-    </form > -->
+  <style>
+    #filters {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+    }
 
-<div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1">
+    .filter {
+        text-align: center;
+        margin-right: 2rem;
+        margin-top: 2rem;
+        opacity: 0.7;
+        min-width: 70px;
+    }
+
+    .filter:hover {
+        opacity: 1;
+        cursor: pointer;
+    }
+
+    .filter p {
+        font-size: 0.8rem;
+        margin-top: 0.4rem;
+        margin-bottom: 0;
+    }
+
+    .filter a {
+        text-decoration: none;
+        color: black;
+    }
+    @media (max-width: 768px) {
+    #filters {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        gap: 1.2rem;
+        padding: 0.5rem 0;
+        scrollbar-width: none;
+    }
+
+    #filters::-webkit-scrollbar {
+        display: none;
+    }
+
+    .filter {
+        flex: 0 0 auto;
+        margin: 0;
+        min-width: 70px;
+    }
+}
+.tax-toogle {
+  border: 1px solid black;
+  border-radius: 1rem;
+  height: 4rem;
+  padding: 1rem;
+  margin-left: 2rem;
+   display: flex;
+   align-items: center;
+}
+.tax-info{
+  display: none;
+}
+</style>
+
+<div id="filters">
+
+    <div class="filter">
+        <a href="/listings?category=trending">
+            <div><i class="fa-solid fa-fire"></i></div>
+            <p>Trending</p>
+        </a>
+    </div>
+
+    <div class="filter">
+        <a href="/listings?category=rooms">
+            <div><i class="fa-solid fa-bed"></i></div>
+            <p>Rooms</p>
+        </a>
+    </div>
+
+    <div class="filter">
+        <a href="/listings?category=iconic cities">
+            <div><i class="fa-solid fa-mountain-city"></i></div>
+            <p>Iconic Cities</p>
+        </a>
+    </div>
+
+    <div class="filter">
+        <a href="/listings?category=mountains">
+            <div><i class="fa-solid fa-mountain"></i></div>
+            <p>Mountains</p>
+        </a>
+    </div>
+
+    <div class="filter">
+        <a href="/listings?category=castles">
+            <div><i class="fa-brands fa-fort-awesome"></i></div>
+            <p>Castles</p>
+        </a>
+    </div>
+
+    <div class="filter">
+        <a href="/listings?category=amazing pools">
+            <div><i class="fa-solid fa-person-swimming"></i></div>
+            <p>Amazing Pools</p>
+        </a>
+    </div>
+
+    <div class="filter">
+        <a href="/listings?category=camping">
+            <div><i class="fa-solid fa-campground"></i></div>
+            <p>Camping</p>
+        </a>
+    </div>
+
+    <div class="filter">
+        <a href="/listings?category=farms">
+            <div><i class="fa-solid fa-seedling"></i></div>
+            <p>Farms</p>
+        </a>
+    </div>
+
+    <div class="filter">
+        <a href="/listings?category=arctic">
+            <div><i class="fa-solid fa-snowflake"></i></div>
+            <p>Arctic</p>
+        </a>
+    </div>
+
+<div class="filter">
+        <a href="/listings?category=Domes">
+            <div><i class="fa-solid fa-igloo"></i></div>
+            <p>Domes</p>
+        </a>
+    </div>
+
+<div class="filter">
+        <a href="/listings?category=Boats">
+            <div><i class="fa-solid fa-sailboat"></i></div>
+            <p>Boats</p>
+        </a>
+    </div>
+
+
+<div class="tax-toogle">
+  <div class="form-check-reverse form-switch">
+  <input class="form-check-input" type="checkbox" role="switch" id="flexswitchCheckDefault">
+  <label class="form-check-label" for="flexswitchCheckDefault">Display total after Taxes</label>
+</div>
+</div>
+</div>
+<% if (typeof searchError !== "undefined" && searchError) { %>
+    <div class="alert alert-danger text-center" role="alert">
+        <%= searchError %>
+    </div>
+<% } %>
+
+<div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mt-3">
     <% for(let listing of allListings){%>
         <a href="/listings/<%= listing._id%>" class="listing-link">
     <div class="card col listing-card" >
@@ -19,6 +169,7 @@
     <p class="card-text">
         <b><%=listing.title%><br/></b>
         &#8377; <%=listing.price.toLocaleString("en-IN")%>/night
+        <i class="tax-info"> &nbsp; &nbsp;+18% GST </i>
     </p>
   </div>
 </div>
@@ -27,6 +178,17 @@
 <% } %>
 </div>
 
-    
-</body>
-</html>
+   <script>
+      let taxSwitch=document.getElementById("flexswitchCheckDefault")
+      taxSwitch.addEventListener("click",()=>{
+        let taxinfo=document.getElementsByClassName("tax-info")
+        for(info of taxinfo){
+          if(info.style.display !="inline"){
+          info.style.display="inline"
+        }else{
+          info.style.display="none"
+        }
+
+      }
+      })
+   </script>
