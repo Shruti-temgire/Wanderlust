@@ -57,7 +57,7 @@ const validateListing=(req,res,next)=>{
 const store = MongoStore.create({
     mongoUrl: dburl,
     crypto: {
-        secret: "mysupersecretcode",
+        secret: process.env.SECRET,
     },
     touchAfter: 24 * 3600,
 });
@@ -68,7 +68,7 @@ store.on("error",()=>{
 
 const sessionOptions={
     store,
-    secret:"mysupersecretcode",
+    secret:process.env.SECRET,
     resave:false,
     saveUninitialized:true,
     cookie:{
@@ -81,8 +81,6 @@ const sessionOptions={
 // app.get("/",(req,res)=>{
 //     res.send("i i am root")
 // })
-
-
 
 
 app.use(session(sessionOptions))
@@ -102,14 +100,6 @@ app.use((req,res,next)=>{
     next()
 })
 
-// app.get("/demouser", async(req,res)=>{
-//     let fakeUser= new User({
-//         email:"srudeny@gaimail.com",
-//         username:"delta-student",
-//     })
-//     let registeredUser= await User.register(fakeUser,"helloworld")
-//     res.send(registeredUser)
-// })
 
 
 app.use("/listings",listingRouter);
