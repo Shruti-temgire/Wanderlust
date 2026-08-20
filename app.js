@@ -10,8 +10,6 @@ app.get("/health", (req, res) => {
 });
 
 const mongoose = require("mongoose");
-const app=express();
-const mongoose=require("mongoose")
 const path = require("path")
 const methodOverride=require("method-override")
 const ejsMate=require("ejs-mate");
@@ -24,7 +22,7 @@ const LocalStrategy=require("passport-local")
 const User= require("./models/user.js")
 const port = process.env.PORT || 8080;
 const Review=require("./models/review.js")
-
+const { listingSchema } = require("./schema.js");
 
 const listingRouter =require("./routes/listing.js")
 const reviewRouter=require("./routes/review.js")
@@ -69,9 +67,9 @@ const store = MongoStore.create({
     touchAfter: 24 * 3600,
 });
 
-store.on("error",()=>{
-    console.log("error in mongo session store",err)
-})
+store.on("error", (err) => {
+    console.log("error in mongo session store", err);
+});
 
 const sessionOptions={
     store,
@@ -106,6 +104,10 @@ app.use((req,res,next)=>{
     res.locals.currUser=req.user;
     next()
 })
+
+app.get("/", (req, res) => {
+    res.redirect("/listings");
+});
 
 
 
