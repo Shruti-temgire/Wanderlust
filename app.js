@@ -3,6 +3,13 @@ if(process.env.NODE_ENV!="production"){
 }
 
 const express=require("express")
+const app = express();
+
+app.get("/health", (req, res) => {
+    res.status(200).send("OK");
+});
+
+const mongoose = require("mongoose");
 const app=express();
 const mongoose=require("mongoose")
 const path = require("path")
